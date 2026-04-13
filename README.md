@@ -8,6 +8,8 @@
 ![Tests](https://img.shields.io/badge/tests-103%20passing-success)
 ![Coverage](https://img.shields.io/badge/coverage-E2E%20%7C%20API%20%7C%20Visual%20%7C%20A11y-blue)
 
+**📊 [View Live Test Report →](https://favzqn.github.io/cc/allure-report/index.html)**
+
 ---
 
 ## Architecture Overview
@@ -162,7 +164,7 @@ npm run report:serve              # Serve downloaded CI artifacts at http://loca
 ```
 
 **CI-generated reports:**
-- **Main branch**: Auto-deployed to GitHub Pages at `https://<username>.github.io/<repo>/allure-report/`
+- **Main branch**: Auto-deployed to [GitHub Pages](https://favzqn.github.io/cc/allure-report/index.html) ← **Live Report**
 - **PRs/branches**: Download `allure-report` artifact and run `npx serve -s ./allure-report -p 4040`
 
 ### Performance Tests (requires k6)
@@ -359,6 +361,8 @@ prevent collisions when multiple shards create employees simultaneously.
 ## Test Results
 
 > Full run: **103 tests passing** across 7 suites (chromium · firefox · webkit · smoke · api · visual · setup) in ~4m 31s
+> 
+> **[📊 View Interactive Report](https://favzqn.github.io/cc/allure-report/index.html)**
 
 ### Allure Report — Overview
 ![Allure Overview](docs/images/allure-overview.png)

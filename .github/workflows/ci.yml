@@ -270,6 +270,19 @@ jobs:
           path: allure-report/
           retention-days: 30
 
+      - name: Add report viewing instructions
+        run: |
+          echo "## 📊 Allure Report Generated" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "🌐 **Live Report**: https://${{ github.repository_owner }}.github.io/${{ github.event.repository.name }}/allure-report/" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "📥 **Download artifact** \`allure-report\` and serve locally:" >> $GITHUB_STEP_SUMMARY
+            echo '```bash' >> $GITHUB_STEP_SUMMARY
+            echo 'npx serve -s ./allure-report -p 4040' >> $GITHUB_STEP_SUMMARY
+            echo '# Then open http://localhost:4040' >> $GITHUB_STEP_SUMMARY
+            echo '```' >> $GITHUB_STEP_SUMMARY
+          fi
+
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3

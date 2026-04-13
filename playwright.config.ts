@@ -67,6 +67,7 @@ export default defineConfig({
     // ── Cross-browser full regression ───────────────────────────────────────
     {
       name: 'chromium',
+      testIgnore: /.*\.visual\.spec\.ts/,
       use: {
         ...devices['Desktop Chrome'],
         storageState: 'src/.auth/admin.json',

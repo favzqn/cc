@@ -3,7 +3,7 @@
 > **Senior QA Automation Engineer — Technical Assessment**
 > Playwright · TypeScript · Allure · K6 Performance · GitHub Actions CI/CD · Claude AI
 
-[![CI/CD Pipeline](https://github.com/fauzanrizky/orangehrm-qa-automation/actions/workflows/ci.yml/badge.svg)](https://github.com/fauzanrizky/orangehrm-qa-automation/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/favzqn/orangehrm-qa-automation/actions/workflows/ci.yml/badge.svg)](https://github.com/favzqn/orangehrm-qa-automation/actions/workflows/ci.yml)
 
 ---
 
@@ -65,7 +65,7 @@ orangehrm-qa-automation/
 
 ```bash
 # Clone and install
-git clone https://github.com/fauzanrizky/orangehrm-qa-automation
+git clone https://github.com/favzqn/orangehrm-qa-automation
 cd orangehrm-qa-automation
 npm install                           # Also installs husky pre-commit hooks
 
@@ -387,4 +387,4 @@ Screenshots, videos, and traces are captured automatically on test failure.
 ## Contact
 
 Submitted by: **Fauzan**
-Repository: [github.com/fauzanrizky/orangehrm-qa-automation](https://github.com/fauzanrizky/orangehrm-qa-automation)
+Repository: [github.com/favzqn/orangehrm-qa-automation](https://github.com/favzqn/orangehrm-qa-automation)

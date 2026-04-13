@@ -1,0 +1,11 @@
+#!/bin/sh
+# Enforce conventional commit format: type(scope): message
+commit_msg=$(cat "$1")
+pattern="^(feat|fix|test|chore|docs|refactor|perf|ci|style|revert)(\(.+\))?: .{1,100}$"
+if ! echo "$commit_msg" | grep -Eq "$pattern"; then
+  echo "❌ Commit message must follow Conventional Commits:"
+  echo "   type(scope): description"
+  echo "   e.g. test(employee): add lifecycle spec"
+  echo "   Types: feat|fix|test|chore|docs|refactor|perf|ci|style|revert"
+  exit 1
+fi

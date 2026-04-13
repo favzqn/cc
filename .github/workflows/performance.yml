@@ -1,0 +1,77 @@
+name: Performance Testing (On-Demand)
+
+on:
+  workflow_dispatch:
+    inputs:
+      scenario:
+        description: 'Performance scenario to run'
+        required: true
+        default: 'all'
+        type: choice
+        options: [login, employee, all]
+      vus:
+        description: 'Max virtual users'
+        required: false
+        default: '10'
+      duration:
+        description: 'Test duration (e.g. 1m, 5m)'
+        required: false
+        default: '2m'
+
+jobs:
+  performance:
+    name: K6 Performance — ${{ github.event.inputs.scenario }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+
+      - name: Create reports directory
+        run: mkdir -p reports/performance
+
+      - name: Run Login performance test
+        if: github.event.inputs.scenario == 'login' || github.event.inputs.scenario == 'all'
+        run: |
+          k6 run \
+            --vus ${{ github.event.inputs.vus }} \
+            --duration ${{ github.event.inputs.duration }} \
+            tests/performance/login.k6.js
+
+      - name: Run Employee performance test
+        if: github.event.inputs.scenario == 'employee' || github.event.inputs.scenario == 'all'
+        run: |
+          k6 run \
+            --vus ${{ github.event.inputs.vus }} \
+            --duration ${{ github.event.inputs.duration }} \
+            tests/performance/employee.k6.js
+
+      - name: Upload performance reports
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: performance-reports-${{ github.run_id }}
+          path: reports/performance/
+          retention-days: 30
+
+      - name: Comment performance results on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            let body = '## K6 Performance Results\n\n';
+            try {
+              const summary = JSON.parse(fs.readFileSync('reports/performance/login-summary.json', 'utf8'));
+              const p95 = summary.metrics?.http_req_duration?.values?.['p(95)'] ?? 'N/A';
+              body += `**Login API p95**: ${typeof p95 === 'number' ? p95.toFixed(0) + 'ms' : p95}\n`;
+            } catch (e) { body += '_No login report generated_\n'; }
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body,
+            });

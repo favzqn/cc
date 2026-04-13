@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  # ── Smoke tests (fastest feedback) ──────────────────────────────────────────
+  smoke:
+    build: .
+    environment:
+      - BASE_URL=${BASE_URL:-https://opensource-demo.orangehrmlive.com}
+      - ADMIN_USER=${ADMIN_USER:-Admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - TEST_ENV=${TEST_ENV:-demo}
+    command: >
+      npx playwright test --project=smoke
+      --reporter=allure-playwright,list
+    volumes:
+      - allure-results:/app/allure-results
+      - reports:/app/reports
+
+  # ── Full regression (chromium) ───────────────────────────────────────────────
+  regression:
+    build: .
+    environment:
+      - BASE_URL=${BASE_URL:-https://opensource-demo.orangehrmlive.com}
+      - ADMIN_USER=${ADMIN_USER:-Admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+    command: >
+      npx playwright test --project=chromium
+      --workers=4
+      --reporter=allure-playwright,list
+    volumes:
+      - allure-results:/app/allure-results
+      - reports:/app/reports
+
+  # ── API tests only ───────────────────────────────────────────────────────────
+  api:
+    build: .
+    environment:
+      - BASE_URL=${BASE_URL:-https://opensource-demo.orangehrmlive.com}
+      - ADMIN_USER=${ADMIN_USER:-Admin}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin123}
+    command: npx playwright test --project=api --reporter=allure-playwright,list
+    volumes:
+      - allure-results:/app/allure-results
+      - reports:/app/reports
+
+  # ── Allure report server ─────────────────────────────────────────────────────
+  allure:
+    build: .
+    ports:
+      - "4040:4040"
+    command: >
+      sh -c "allure generate allure-results --clean -o allure-report &&
+             allure open allure-report --port 4040 --host 0.0.0.0"
+    volumes:
+      - allure-results:/app/allure-results
+    depends_on:
+      - smoke
+
+volumes:
+  allure-results:
+  reports:

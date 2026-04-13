@@ -1,0 +1,39 @@
+[
+  {
+    "name": "Product Bugs",
+    "messageRegex": ".*AssertionError.*|.*Expected.*received.*|.*toBeVisible.*|.*toHaveText.*|.*toHaveURL.*",
+    "matchedStatuses": ["failed"],
+    "flaky": false
+  },
+  {
+    "name": "Test Infrastructure Issues",
+    "messageRegex": ".*TimeoutError.*|.*net::ERR.*|.*ECONNREFUSED.*|.*Navigation timeout.*|.*waiting for.*",
+    "matchedStatuses": ["failed"],
+    "flaky": false
+  },
+  {
+    "name": "Broken Tests",
+    "messageRegex": ".*TypeError.*|.*ReferenceError.*|.*Cannot read prop.*|.*is not a function.*",
+    "matchedStatuses": ["failed"],
+    "flaky": false
+  },
+  {
+    "name": "Flaky Tests",
+    "matchedStatuses": ["failed"],
+    "flaky": true
+  },
+  {
+    "name": "Skipped / Known Issues",
+    "matchedStatuses": ["skipped", "pending"]
+  },
+  {
+    "name": "Accessibility Violations",
+    "messageRegex": ".*a11y.*|.*axe.*|.*wcag.*|.*Critical a11y.*",
+    "matchedStatuses": ["failed"]
+  },
+  {
+    "name": "API Contract Failures",
+    "messageRegex": ".*API.*failed.*|.*status 4[0-9][0-9].*|.*status 5[0-9][0-9].*",
+    "matchedStatuses": ["failed"]
+  }
+]

@@ -1,0 +1,45 @@
+{
+  "mcpServers": {
+    "chrome-devtools": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"],
+      "env": {},
+      "description": "Chrome DevTools MCP — live browser inspection, screenshot capture, DOM queries, network monitoring for test debugging"
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "env": {
+        "PLAYWRIGHT_HEADLESS": "false"
+      },
+      "description": "Playwright MCP — direct browser automation from Claude, useful for exploratory test generation and debugging"
+    },
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@upstash/context7-mcp@latest"],
+      "description": "Context7 — fetch latest Playwright, K6, and Allure documentation inline"
+    }
+  },
+  "permissions": {
+    "allow": [
+      "Bash(npm *)",
+      "Bash(npx playwright *)",
+      "Bash(npx allure *)",
+      "Bash(k6 run *)",
+      "Bash(node scripts/*)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)",
+      "Bash(git add *)",
+      "Bash(git commit *)"
+    ],
+    "deny": [
+      "Bash(git push --force*)",
+      "Bash(rm -rf *)",
+      "Bash(git reset --hard*)"
+    ]
+  },
+  "env": {
+    "TEST_ENV": "demo"
+  }
+}

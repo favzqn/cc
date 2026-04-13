@@ -1,0 +1,24 @@
+{
+  "employees": [
+    {
+      "scenario": "standard_employee",
+      "firstName": "John",
+      "middleName": "Michael",
+      "lastName": "TestUser",
+      "nationality": "Australian",
+      "maritalStatus": "Single",
+      "gender": "Male"
+    },
+    {
+      "scenario": "employee_with_all_fields",
+      "firstName": "Sarah",
+      "middleName": "Anne",
+      "lastName": "Complete",
+      "nationality": "American",
+      "maritalStatus": "Married",
+      "gender": "Female"
+    }
+  ],
+  "roles": ["Admin", "ESS"],
+  "statuses": ["Enabled", "Disabled"]
+}

@@ -1,16 +1,19 @@
 # OrangeHRM QA Automation Framework
 
-> **Senior QA Automation Engineer — Technical Assessment**
+> **Senior QA Automation Engineer — Technical Assessment**  
 > Playwright · TypeScript · Allure · K6 Performance · GitHub Actions CI/CD · Claude AI
 
-[![CI/CD Pipeline](https://github.com/favzqn/orangehrm-qa-automation/actions/workflows/ci.yml/badge.svg)](https://github.com/favzqn/orangehrm-qa-automation/actions/workflows/ci.yml)
+[![CI/CD Pipeline](https://github.com/favzqn/cc/actions/workflows/ci.yml/badge.svg)](https://github.com/favzqn/cc/actions/workflows/ci.yml)
+[![Allure Report](https://img.shields.io/badge/Allure-Report-yellow?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCI+PHBhdGggZmlsbD0iI2ZmZiIgZD0iTTEyIDJDNi40OCAyIDIgNi40OCAyIDEyczQuNDggMTAgMTAgMTAgMTAtNC40OCAxMC0xMFMxNy41MiAyIDEyIDJ6bTAgMThjLTQuNDEgMC04LTMuNTktOC04czMuNTktOCA4LTggOCAzLjU5IDggOC0zLjU5IDgtOCA4em0tMS00aDJ2Mmgtdi0yem0wLThoMnY2aC0yVjh6Ii8+PC9zdmc+)](https://favzqn.github.io/cc/allure-report/)
+![Tests](https://img.shields.io/badge/tests-103%20passing-success)
+![Coverage](https://img.shields.io/badge/coverage-E2E%20%7C%20API%20%7C%20Visual%20%7C%20A11y-blue)
 
 ---
 
 ## Architecture Overview
 
 ```
-orangehrm-qa-automation/
+cc/
 ├── src/
 │   ├── pages/                    # Page Object Models
 │   │   ├── base.page.ts          #   → Smart wait wrappers, retry-aware interactions
@@ -65,8 +68,8 @@ orangehrm-qa-automation/
 
 ```bash
 # Clone and install
-git clone https://github.com/favzqn/orangehrm-qa-automation
-cd orangehrm-qa-automation
+git clone https://github.com/favzqn/cc
+cd cc
 npm install                           # Also installs husky pre-commit hooks
 
 # Install Playwright browsers
@@ -87,7 +90,9 @@ ADMIN_PASSWORD=admin123
 ANTHROPIC_API_KEY=your_key_here   # Optional: enables AI failure analysis
 ```
 
-### Docker (zero local setup)
+### Docker (Optional — Local Development Only)
+
+> **Note:** CI uses native Ubuntu runners. Docker is provided for local convenience if you prefer containerized execution.
 
 ```bash
 # Run smoke tests — no Node/Playwright install needed
@@ -153,7 +158,12 @@ npx playwright test --ui          # Playwright UI Mode
 ```bash
 npm run report:generate           # Build Allure HTML report (with trend history)
 npm run report:open               # Open in browser
+npm run report:serve              # Serve downloaded CI artifacts at http://localhost:4040
 ```
+
+**CI-generated reports:**
+- **Main branch**: Auto-deployed to GitHub Pages at `https://<username>.github.io/<repo>/allure-report/`
+- **PRs/branches**: Download `allure-report` artifact and run `npx serve -s ./allure-report -p 4040`
 
 ### Performance Tests (requires k6)
 
@@ -384,7 +394,57 @@ Screenshots, videos, and traces are captured automatically on test failure.
 
 ---
 
+## Development Workflow
+
+### Pre-commit Hooks (Husky)
+
+Quality gates run automatically on `git commit`:
+- **ESLint** — code style enforcement
+- **TypeScript** — type checking
+- **Prettier** — formatting
+
+### Adding New Tests
+
+```typescript
+// 1. Create Page Object (if needed)
+// src/pages/leave/leave.page.ts
+export class LeavePage extends BasePage {
+  async applyLeave(type: string, dates: { from: string; to: string }) {
+    await this.waitForPageReady();
+    // ... implementation
+  }
+}
+
+// 2. Register in fixtures
+// src/fixtures/base.fixture.ts
+export const test = base.extend<{
+  leavePage: LeavePage;
+}>({
+  leavePage: async ({ page }, use) => {
+    await use(new LeavePage(page));
+  },
+});
+
+// 3. Write test with tags
+// tests/e2e/leave/leave-apply.spec.ts
+test('apply annual leave @smoke @leave', async ({ leavePage }) => {
+  await leavePage.applyLeave('Annual', { from: '2024-05-01', to: '2024-05-05' });
+  // ... assertions
+});
+```
+
+### Running Tests Locally Before Push
+
+```bash
+npm run lint              # Check code style
+npm run typecheck         # Verify types
+npm run test:smoke        # Fast smoke tests
+npm run test:affected     # Only tests affected by changes (if configured)
+```
+
+---
+
 ## Contact
 
 Submitted by: **Fauzan**
-Repository: [github.com/favzqn/orangehrm-qa-automation](https://github.com/favzqn/orangehrm-qa-automation)
+Repository: [github.com/favzqn/cc](https://github.com/favzqn/cc)

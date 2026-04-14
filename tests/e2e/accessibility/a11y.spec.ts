@@ -2,6 +2,7 @@ import { test, expect } from '../../../src/fixtures/base.fixture';
 import AxeBuilder from '@axe-core/playwright';
 import { allure } from 'allure-playwright';
 import type { Result } from 'axe-core';
+import { ROUTES, WAIT_STATES, ALLURE, WCAG_TAGS } from '../../../src/config/test-constants';
 
 /**
  * Accessibility Tests — WCAG 2.1 AA compliance audit
@@ -28,17 +29,17 @@ const KNOWN_APP_VIOLATIONS = [
 
 test.describe('Accessibility Audits', () => {
   test('login page has no critical a11y violations @a11y', async ({ page }) => {
-    await allure.epic('Accessibility');
+    await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
     await allure.feature('WCAG 2.1 AA');
     await allure.story('Login Page');
-    await allure.severity('normal');
+    await allure.severity(ALLURE.SEVERITY.NORMAL);
 
     // Navigate unauthenticated — login page is public
-    await page.goto('/web/index.php/auth/login');
-    await page.waitForLoadState('networkidle');
+    await page.goto(ROUTES.AUTH.LOGIN);
+    await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
 
     const results = await new AxeBuilder({ page })
-      .withTags(['wcag2a', 'wcag2aa', 'wcag21aa'])
+      .withTags([...WCAG_TAGS])
       .analyze();
 
     await allure.attachment(
@@ -55,11 +56,11 @@ test.describe('Accessibility Audits', () => {
   });
 
   test('employee list page has no critical a11y violations @a11y', async ({ page }) => {
-    await allure.epic('Accessibility');
+    await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
     await allure.story('Employee List Page');
 
-    await page.goto('/web/index.php/pim/viewEmployeeList');
-    await page.waitForLoadState('networkidle');
+    await page.goto(ROUTES.PIM.EMPLOYEE_LIST);
+    await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
@@ -79,11 +80,11 @@ test.describe('Accessibility Audits', () => {
   });
 
   test('add employee form has no critical a11y violations @a11y', async ({ page }) => {
-    await allure.epic('Accessibility');
+    await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
     await allure.story('Add Employee Form');
 
-    await page.goto('/web/index.php/pim/addEmployee');
-    await page.waitForLoadState('networkidle');
+    await page.goto(ROUTES.PIM.ADD_EMPLOYEE);
+    await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])
@@ -103,11 +104,11 @@ test.describe('Accessibility Audits', () => {
   });
 
   test('dashboard has no critical a11y violations @a11y', async ({ page }) => {
-    await allure.epic('Accessibility');
+    await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
     await allure.story('Dashboard');
 
-    await page.goto('/web/index.php/dashboard/index');
-    await page.waitForLoadState('networkidle');
+    await page.goto(ROUTES.DASHBOARD);
+    await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
 
     const results = await new AxeBuilder({ page })
       .withTags(['wcag2a', 'wcag2aa'])

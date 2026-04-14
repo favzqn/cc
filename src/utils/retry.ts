@@ -7,6 +7,8 @@
  * - Conditional retry: re-runs only on specific error types
  */
 
+import { TIMEOUTS } from '../config/test-constants';
+
 export interface RetryOptions {
   attempts?: number;
   delay?: number;
@@ -72,7 +74,7 @@ export async function poll(
   condition: () => Promise<boolean>,
   options: { interval?: number; timeout?: number; description?: string } = {}
 ): Promise<void> {
-  const { interval = 1000, timeout = 30_000, description = 'condition' } = options;
+  const { interval = 1000, timeout = TIMEOUTS.PAGE_LOAD, description = 'condition' } = options;
   const deadline = Date.now() + timeout;
 
   while (Date.now() < deadline) {

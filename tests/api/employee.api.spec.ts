@@ -2,6 +2,7 @@ import { test, expect } from '../../src/fixtures/base.fixture';
 import { allure } from 'allure-playwright';
 import { TestDataFactory } from '../../src/utils/test-data';
 import { config } from '../../src/config/env.config';
+import { HTTP_STATUS, ALLURE } from '../../src/config/test-constants';
 
 /** Shape of the employee object returned by OrangeHRM API v2 */
 interface EmployeeApiData {
@@ -30,7 +31,7 @@ test.describe('Employee API', () => {
     await allure.epic('API');
     await allure.feature('Employee CRUD API');
     await allure.story('Create Employee');
-    await allure.severity('critical');
+    await allure.severity(ALLURE.SEVERITY.CRITICAL);
 
     const employee = TestDataFactory.employee();
 
@@ -54,6 +55,7 @@ test.describe('Employee API', () => {
     await allure.epic('API');
     await allure.feature('Employee CRUD API');
     await allure.story('Get Employee');
+    await allure.severity(ALLURE.SEVERITY.CRITICAL);
 
     const employee = TestDataFactory.employee();
     const { empNumber } = await apiClient.createEmployee({
@@ -136,7 +138,7 @@ test.describe('Employee API', () => {
   test('API returns 401 when session cookie is absent @api @security', async ({
     browser,
   }) => {
-    await allure.epic('API Security');
+    await allure.epic(ALLURE.EPIC.API_SECURITY);
     await allure.feature('Authentication');
 
     // Make an API call with NO cookies (fresh unauthenticated context)
@@ -144,7 +146,7 @@ test.describe('Employee API', () => {
     const unauthRequest = unauthContext.request;
 
     const response = await unauthRequest.get(`${config.apiBaseUrl}/pim/employees`);
-    expect(response.status()).toBe(401);
+    expect(response.status()).toBe(HTTP_STATUS.UNAUTHORIZED);
     await unauthContext.close();
   });
 

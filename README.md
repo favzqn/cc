@@ -30,7 +30,8 @@ cc/
 │   │   ├── ai-helper.ts          # Claude AI — flaky detection, failure analysis
 │   │   └── retry.ts              # Retry utilities with backoff strategies
 │   └── config/
-│       └── env.config.ts         # Environment-based configuration
+│       ├── env.config.ts         # Environment-based configuration
+│       └── test-constants.ts     # Centralized constants (URLs, timeouts, HTTP codes)
 ├── tests/
 │   ├── auth.setup.ts             # Playwright auth setup project
 │   ├── e2e/
@@ -327,6 +328,14 @@ K6 thresholds are enforced as pass/fail gates:
 ### 7. Parallel Test Isolation
 `TestDataFactory` prefixes all generated names with `W{workerIndex}{timestamp}` to
 prevent collisions when multiple shards create employees simultaneously.
+
+### 8. Centralized Constants
+All hardcoded values (URLs, timeouts, HTTP status codes, Allure metadata) are extracted
+to `src/config/test-constants.ts`. This ensures:
+- **Single source of truth** for configuration values
+- **Easy maintenance** when routes or timeouts change
+- **Type safety** with TypeScript const assertions
+- **No magic numbers** scattered across test files
 
 ---
 

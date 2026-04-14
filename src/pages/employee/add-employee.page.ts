@@ -1,5 +1,6 @@
 import { Page } from '@playwright/test';
 import { BasePage } from '../base.page';
+import { TIMEOUTS } from '../../config/test-constants';
 
 export interface EmployeeDetails {
   firstName: string;
@@ -17,21 +18,16 @@ export class AddEmployeePage extends BasePage {
   private readonly firstNameInput = () => this.page.locator('input[name="firstName"]');
   private readonly middleNameInput = () => this.page.locator('input[name="middleName"]');
   private readonly lastNameInput = () => this.page.locator('input[name="lastName"]');
-  // Employee Id is in its own oxd-input-group (not shared with name fields)
-  private readonly employeeIdInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Employee Id' }).locator('input');
+  private readonly employeeIdInput = () => this.inputByLabel('Employee Id');
   // oxd-switch-input: the <span> is the clickable element; the <input> is hidden behind it
   private readonly createLoginToggle = () =>
     this.page.locator('.oxd-form-row').filter({ hasText: 'Create Login Details' }).locator('input');
   private readonly createLoginToggleSpan = () =>
     this.page.locator('.oxd-form-row').filter({ hasText: 'Create Login Details' }).locator('.oxd-switch-input');
-  private readonly usernameInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Username' }).locator('input');
-  private readonly passwordInput = () =>
-    this.page.locator('input[type="password"]').first();
-  private readonly confirmPasswordInput = () =>
-    this.page.locator('input[type="password"]').last();
-  private readonly saveButton = () => this.page.getByRole('button', { name: 'Save' });
+  private readonly usernameInput = () => this.inputByLabel('Username');
+  private readonly passwordInput = () => this.getPasswordInput('first');
+  private readonly confirmPasswordInput = () => this.getPasswordInput('last');
+  private readonly saveButton = () => this.buttonByName('Save');
 
   constructor(page: Page) {
     super(page);
@@ -70,7 +66,7 @@ export class AddEmployeePage extends BasePage {
     const toastPromise = this.expectToast('Successfully Saved');
     await this.safeClick(this.saveButton());
     await Promise.all([
-      this.page.waitForURL(/pim\/viewPersonalDetails\/empNumber\/\d+/, { timeout: 30_000 }),
+      this.page.waitForURL(/pim\/viewPersonalDetails\/empNumber\/\d+/, { timeout: TIMEOUTS.PAGE_LOAD }),
       toastPromise,
     ]);
     const url = this.page.url();

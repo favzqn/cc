@@ -1,5 +1,6 @@
 import { Page, expect } from '@playwright/test';
 import { BasePage } from './base.page';
+import { TIMEOUTS } from '../config/test-constants';
 
 export interface LoginCredentials {
   username: string;
@@ -52,11 +53,11 @@ export class LoginPage extends BasePage {
   }
 
   async expectLoginError(message: string): Promise<void> {
-    await expect(this.errorAlert()).toContainText(message, { timeout: 10_000 });
+    await expect(this.errorAlert()).toContainText(message, { timeout: TIMEOUTS.MEDIUM });
   }
 
   async expectValidationError(): Promise<void> {
-    await expect(this.fieldErrorMessage()).toBeVisible({ timeout: 5_000 });
+    await expect(this.fieldErrorMessage()).toBeVisible({ timeout: TIMEOUTS.SHORT });
   }
 
   async expectPageVisible(): Promise<void> {

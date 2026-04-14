@@ -1,6 +1,7 @@
 import { test, expect } from '../../../src/fixtures/base.fixture';
 import { allure } from 'allure-playwright';
 import { config } from '../../../src/config/env.config';
+import { TIMEOUTS, ROUTES, URL_PATTERNS, ALLURE } from '../../../src/config/test-constants';
 
 /**
  * @group auth
@@ -13,10 +14,10 @@ test.describe('Authentication', () => {
     loginPage,
     page,
   }) => {
-    await allure.epic('Authentication');
-    await allure.feature('Login');
+    await allure.epic(ALLURE.EPIC.AUTHENTICATION);
+    await allure.feature(ALLURE.FEATURE.LOGIN_FLOW);
     await allure.story('Valid Credentials');
-    await allure.severity('critical');
+    await allure.severity(ALLURE.SEVERITY.CRITICAL);
 
     await loginPage.goto();
     await loginPage.expectPageVisible();
@@ -27,14 +28,14 @@ test.describe('Authentication', () => {
 
     await allure.step('Verify dashboard loaded', async () => {
       // Demo server can be slow — use generous timeout
-      await page.waitForURL(/dashboard|pim|admin/, { timeout: 30_000 });
-      await expect(page.locator('.oxd-topbar')).toBeVisible({ timeout: 10_000 });
+      await page.waitForURL(URL_PATTERNS.DASHBOARD, { timeout: TIMEOUTS.PAGE_LOAD });
+      await expect(page.locator('.oxd-topbar')).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
     });
   });
 
   test('should show error with invalid password @smoke', async ({ loginPage }) => {
-    await allure.epic('Authentication');
-    await allure.feature('Login');
+    await allure.epic(ALLURE.EPIC.AUTHENTICATION);
+    await allure.feature(ALLURE.FEATURE.LOGIN_FLOW);
     await allure.story('Invalid Credentials');
 
     await loginPage.goto();
@@ -57,8 +58,8 @@ test.describe('Authentication', () => {
   test('should redirect to login when accessing protected page unauthenticated @smoke', async ({
     page,
   }) => {
-    await page.goto('/web/index.php/pim/viewEmployeeList');
-    await expect(page).toHaveURL(/auth\/login/);
+    await page.goto(ROUTES.PIM.EMPLOYEE_LIST);
+    await expect(page).toHaveURL(URL_PATTERNS.LOGIN);
   });
 
   test('should logout successfully @regression', async ({ loginPage, page }) => {

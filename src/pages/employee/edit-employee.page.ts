@@ -35,32 +35,23 @@ export class EditEmployeePage extends BasePage {
   // Personal Details — name inputs use name attribute (no accessible label on OrangeHRM)
   private readonly firstNameInput = () => this.page.locator('input[name="firstName"]');
   private readonly lastNameInput = () => this.page.locator('input[name="lastName"]');
-  private readonly driverLicenseInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: "Driver's License Number" }).locator('input');
-  private readonly dobInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Date of Birth' }).locator('input');
+  private readonly driverLicenseInput = () => this.inputByLabel("Driver's License Number");
+  private readonly dobInput = () => this.inputByLabel('Date of Birth');
   // Gender: exact role match prevents 'Male' filter from matching the 'Female' sibling
   private readonly genderMaleRadio = () =>
     this.page.getByRole('radio', { name: 'Male', exact: true });
   private readonly genderFemaleRadio = () =>
     this.page.getByRole('radio', { name: 'Female', exact: true });
-  // Dropdowns scoped to their input-group containers
-  private readonly nationalityDropdown = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Nationality' }).locator('.oxd-select-text');
-  private readonly maritalStatusDropdown = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Marital Status' }).locator('.oxd-select-text');
+  private readonly nationalityDropdown = () => this.dropdownByLabel('Nationality');
+  private readonly maritalStatusDropdown = () => this.dropdownByLabel('Marital Status');
 
   // Contact Details
-  private readonly street1Input = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Street 1' }).locator('input');
-  private readonly cityInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'City' }).locator('input');
-  private readonly mobileInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Mobile' }).locator('input');
-  private readonly workEmailInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Work Email' }).locator('input');
+  private readonly street1Input = () => this.inputByLabel('Street 1');
+  private readonly cityInput = () => this.inputByLabel('City');
+  private readonly mobileInput = () => this.inputByLabel('Mobile');
+  private readonly workEmailInput = () => this.inputByLabel('Work Email');
 
-  private readonly saveButtons = () => this.page.getByRole('button', { name: 'Save' });
+  private readonly saveButtons = () => this.buttonByName('Save');
 
   constructor(page: Page) {
     super(page);

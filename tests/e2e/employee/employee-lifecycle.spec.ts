@@ -1,6 +1,7 @@
 import { test, expect } from '../../../src/fixtures/base.fixture';
 import { allure } from 'allure-playwright';
 import { TestDataFactory } from '../../../src/utils/test-data';
+import { ALLURE } from '../../../src/config/test-constants';
 
 /**
  * Employee Lifecycle — full end-to-end flow covering:
@@ -34,10 +35,10 @@ test.describe('Employee Lifecycle', () => {
   test('1. Create employee with login credentials @employee @smoke', async ({
     addEmployeePage,
   }) => {
-    await allure.epic('Employee Management');
-    await allure.feature('Employee Lifecycle');
+    await allure.epic(ALLURE.EPIC.EMPLOYEE_MANAGEMENT);
+    await allure.feature(ALLURE.FEATURE.EMPLOYEE_LIFECYCLE);
     await allure.story('Create Employee');
-    await allure.severity('critical');
+    await allure.severity(ALLURE.SEVERITY.CRITICAL);
 
     await allure.step('Navigate to Add Employee page', async () => {
       await addEmployeePage.goto();
@@ -85,7 +86,7 @@ test.describe('Employee Lifecycle', () => {
     editEmployeePage,
   }) => {
     await allure.story('Update Employee');
-    await allure.severity('normal');
+    await allure.severity(ALLURE.SEVERITY.NORMAL);
 
     const address = TestDataFactory.address();
 

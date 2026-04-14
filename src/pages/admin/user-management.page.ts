@@ -1,5 +1,6 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from '../base.page';
+import { TIMEOUTS } from '../../config/test-constants';
 
 export type UserRole = 'Admin' | 'ESS';
 
@@ -17,29 +18,21 @@ export interface SystemUser {
  */
 export class UserManagementPage extends BasePage {
   // ── Search bar ─────────────────────────────────────────────────────────────
-  private readonly addButton = () => this.page.getByRole('button', { name: 'Add' });
-  private readonly searchUsernameInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Username' }).locator('input');
-  private readonly searchButton = () => this.page.getByRole('button', { name: 'Search' });
+  private readonly addButton = () => this.buttonByName('Add');
+  private readonly searchUsernameInput = () => this.inputByLabel('Username');
+  private readonly searchButton = () => this.buttonByName('Search');
 
   // ── Add User form ───────────────────────────────────────────────────────────
-  private readonly userRoleDropdown = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'User Role' }).locator('.oxd-select-text');
-  private readonly statusDropdown = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Status' }).locator('.oxd-select-text');
-  private readonly employeeNameInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Employee Name' }).locator('input');
-  private readonly usernameInput = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Username' }).locator('input').last();
-  private readonly passwordInput = () =>
-    this.page.locator('input[type="password"]').first();
-  private readonly confirmPasswordInput = () =>
-    this.page.locator('input[type="password"]').last();
-  private readonly saveButton = () => this.page.getByRole('button', { name: 'Save' });
+  private readonly userRoleDropdown = () => this.dropdownByLabel('User Role');
+  private readonly statusDropdown = () => this.dropdownByLabel('Status');
+  private readonly employeeNameInput = () => this.inputByLabel('Employee Name');
+  private readonly usernameInput = () => this.inputByLabel('Username').last();
+  private readonly passwordInput = () => this.getPasswordInput('first');
+  private readonly confirmPasswordInput = () => this.getPasswordInput('last');
+  private readonly saveButton = () => this.buttonByName('Save');
 
   // ── Table row scoped selectors ──────────────────────────────────────────────
-  private readonly confirmDeleteButton = () =>
-    this.page.getByRole('button', { name: 'Yes, Delete' });
+  private readonly confirmDeleteButton = () => this.buttonByName('Yes, Delete');
   private rowRoleCell = (row: Locator) =>
     row.locator('.oxd-table-cell').nth(2); // 0=checkbox, 1=username, 2=userRole
   private rowDeleteButton = (row: Locator) =>
@@ -79,7 +72,7 @@ export class UserManagementPage extends BasePage {
 
   async expectUserExists(username: string): Promise<void> {
     const row = this.tableRowWith(username);
-    await expect(row).toBeVisible({ timeout: 15_000 });
+    await expect(row).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
   }
 
   async getUserRole(username: string): Promise<string> {

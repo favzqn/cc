@@ -1,25 +1,22 @@
 import { Locator, Page, expect } from '@playwright/test';
 import { BasePage } from '../base.page';
+import { TIMEOUTS } from '../../config/test-constants';
 
 /**
  * EmployeeListPage — PIM > Employee List
  */
 export class EmployeeListPage extends BasePage {
   // ── Search bar ─────────────────────────────────────────────────────────────
-  private readonly addEmployeeButton = () => this.page.getByRole('button', { name: 'Add' });
-  // Employee Name is an autocomplete field (placeholder "Type for hints...")
-  private readonly searchEmployeeName = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Employee Name' }).locator('input');
-  private readonly searchEmployeeId = () =>
-    this.page.locator('.oxd-input-group').filter({ hasText: 'Employee Id' }).locator('input');
-  private readonly searchButton = () => this.page.getByRole('button', { name: 'Search' });
-  private readonly resetButton = () => this.page.getByRole('button', { name: 'Reset' });
+  private readonly addEmployeeButton = () => this.buttonByName('Add');
+  private readonly searchEmployeeName = () => this.inputByLabel('Employee Name');
+  private readonly searchEmployeeId = () => this.inputByLabel('Employee Id');
+  private readonly searchButton = () => this.buttonByName('Search');
+  private readonly resetButton = () => this.buttonByName('Reset');
   private readonly recordCount = () => this.page.locator('.oxd-text--span', { hasText: 'Record' });
   private readonly noRecordsText = () => this.page.locator('span.oxd-text', { hasText: 'No Records Found' });
 
   // ── Table row scoped selectors ──────────────────────────────────────────────
-  private readonly confirmDeleteButton = () =>
-    this.page.getByRole('button', { name: 'Yes, Delete' });
+  private readonly confirmDeleteButton = () => this.buttonByName('Yes, Delete');
   private employeeRow = (firstName: string, lastName: string): Locator =>
     this.page.locator('.oxd-table-row').filter({ hasText: firstName }).filter({ hasText: lastName });
   private rowDeleteButton = (row: Locator): Locator =>
@@ -61,17 +58,17 @@ export class EmployeeListPage extends BasePage {
   }
 
   async getResultCount(): Promise<number> {
-    const text = await this.recordCount().textContent({ timeout: 10_000 });
+    const text = await this.recordCount().textContent({ timeout: TIMEOUTS.MEDIUM });
     const match = text?.match(/\((\d+)\)/);
     return match ? parseInt(match[1], 10) : 0;
   }
 
   async expectEmployeeInResults(firstName: string, lastName: string): Promise<void> {
-    await expect(this.employeeRow(firstName, lastName)).toBeVisible({ timeout: 15_000 });
+    await expect(this.employeeRow(firstName, lastName)).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
   }
 
   async expectNoResults(): Promise<void> {
-    await expect(this.noRecordsText()).toBeVisible({ timeout: 10_000 });
+    await expect(this.noRecordsText()).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
   }
 
   async clickDeleteForEmployee(firstName: string, lastName: string): Promise<void> {

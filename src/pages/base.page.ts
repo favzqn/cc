@@ -1,4 +1,5 @@
 import { Page, Locator, expect } from '@playwright/test';
+import { TIMEOUTS, WAIT_STATES } from '../config/test-constants';
 
 /**
  * BasePage — foundation for all Page Objects.
@@ -22,6 +23,29 @@ export abstract class BasePage {
   private toastContent = (message: string): Locator =>
     this.page.locator('.oxd-toast-content', { hasText: message });
 
+  // ── Reusable locator helpers ──────────────────────────────────────────────
+  /** Get input field within a labeled input group */
+  protected inputByLabel(label: string): Locator {
+    return this.page.locator('.oxd-input-group').filter({ hasText: label }).locator('input');
+  }
+
+  /** Get dropdown trigger within a labeled input group */
+  protected dropdownByLabel(label: string): Locator {
+    return this.page.locator('.oxd-input-group').filter({ hasText: label }).locator('.oxd-select-text');
+  }
+
+  /** Get button by accessible name */
+  protected buttonByName(name: string): Locator {
+    return this.page.getByRole('button', { name });
+  }
+
+  /** Get password input by position (first or last) */
+  protected getPasswordInput(position: 'first' | 'last' = 'first'): Locator {
+    return position === 'first' 
+      ? this.page.locator('input[type="password"]').first()
+      : this.page.locator('input[type="password"]').last();
+  }
+
   constructor(page: Page) {
     this.page = page;
   }
@@ -34,10 +58,10 @@ export abstract class BasePage {
 
   /** Wait for network idle + no spinners */
   async waitForPageReady(): Promise<void> {
-    await this.page.waitForLoadState('networkidle');
+    await this.page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
     // Wait for OrangeHRM spinner to disappear
-    if (await this.loadingSpinner().isVisible({ timeout: 2_000 }).catch(() => false)) {
-      await this.loadingSpinner().waitFor({ state: 'hidden', timeout: 30_000 });
+    if (await this.loadingSpinner().isVisible({ timeout: TIMEOUTS.SHORT }).catch(() => false)) {
+      await this.loadingSpinner().waitFor({ state: 'hidden', timeout: TIMEOUTS.PAGE_LOAD });
     }
   }
 
@@ -64,24 +88,24 @@ export abstract class BasePage {
   /** Autocomplete field interaction */
   async fillAutocomplete(field: Locator, searchText: string, optionText: string): Promise<void> {
     await field.fill(searchText);
-    await this.autocompleteOption(optionText).waitFor({ state: 'visible', timeout: 10_000 });
+    await this.autocompleteOption(optionText).waitFor({ state: 'visible', timeout: TIMEOUTS.MEDIUM });
     await this.autocompleteOption(optionText).click();
   }
 
   /** Click with retry on element detachment */
   async safeClick(locator: Locator, options?: { force?: boolean }): Promise<void> {
-    await expect(locator).toBeVisible({ timeout: 15_000 });
+    await expect(locator).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
     await locator.click({ ...options });
   }
 
   /** Assert toast notification */
   async expectToast(message: string): Promise<void> {
-    await expect(this.toastContent(message)).toBeVisible({ timeout: 10_000 });
+    await expect(this.toastContent(message)).toBeVisible({ timeout: TIMEOUTS.MEDIUM });
   }
 
   /** Wait for a specific URL pattern */
   async waitForUrl(pattern: string | RegExp): Promise<void> {
-    await this.page.waitForURL(pattern, { timeout: 30_000 });
+    await this.page.waitForURL(pattern, { timeout: TIMEOUTS.PAGE_LOAD });
   }
 
   /** Capture debug screenshot */

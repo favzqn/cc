@@ -1,5 +1,6 @@
 import { defineConfig, devices } from '@playwright/test';
 import { config } from './src/config/env.config';
+import { TIMEOUTS } from './src/config/test-constants';
 
 export default defineConfig({
   testDir: './tests',
@@ -7,9 +8,9 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 1,
   workers: process.env.CI ? 4 : 2,
-  timeout: 60_000,
+  timeout: 60_000, // Test timeout (not a wait timeout, keep as-is)
   expect: {
-    timeout: 15_000,
+    timeout: TIMEOUTS.MEDIUM,
     toHaveScreenshot: { maxDiffPixelRatio: 0.02 },
   },
 
@@ -37,8 +38,8 @@ export default defineConfig({
     screenshot: 'only-on-failure',
     video: 'retain-on-failure',
     trace: 'retain-on-failure',
-    actionTimeout: 15_000,
-    navigationTimeout: 30_000,
+    actionTimeout: TIMEOUTS.MEDIUM,
+    navigationTimeout: TIMEOUTS.PAGE_LOAD,
     extraHTTPHeaders: { 'Accept-Language': 'en-US' },
   },
 

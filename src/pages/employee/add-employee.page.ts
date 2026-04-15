@@ -62,8 +62,9 @@ export class AddEmployeePage extends BasePage {
   }
 
   async save(): Promise<string> {
-    // Start listening for the toast BEFORE clicking — it can appear and dismiss in ~3s
-    const toastPromise = this.expectToast('Successfully Saved');
+    // URL redirect is the authoritative success signal — toast is best-effort only
+    // (webkit is slower and the toast can auto-dismiss before the assertion runs)
+    const toastPromise = this.expectToast('Successfully Saved').catch(() => {/* toast missed — ok */});
     await this.safeClick(this.saveButton());
     await Promise.all([
       this.page.waitForURL(/pim\/viewPersonalDetails\/empNumber\/\d+/, { timeout: TIMEOUTS.PAGE_LOAD }),

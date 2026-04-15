@@ -41,9 +41,20 @@ test.describe('Employee API', () => {
       lastName: employee.lastName,
     });
 
-    expect(result.empNumber).toBeDefined();
-    expect(typeof result.empNumber).toBe('number');
-    expect(result.empNumber).toBeGreaterThan(0);
+    await allure.step('Validate response structure', async () => {
+      expect(result.empNumber).toBeDefined();
+      expect(typeof result.empNumber).toBe('number');
+      expect(result.empNumber).toBeGreaterThan(0);
+      expect(result.employeeId).toBeDefined();
+    });
+
+    await allure.step('Validate data integrity via GET', async () => {
+      const fetched = await apiClient.getEmployee(result.empNumber) as unknown as EmployeeApiData;
+      expect(fetched.firstName).toBe(employee.firstName);
+      expect(fetched.lastName).toBe(employee.lastName);
+      expect(fetched.middleName).toBe(employee.middleName);
+      expect(fetched.empNumber).toBe(result.empNumber);
+    });
 
     empCleanup.push(result.empNumber);
   });

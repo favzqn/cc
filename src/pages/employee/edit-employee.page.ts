@@ -1,5 +1,6 @@
-import { Page } from '@playwright/test';
+import { Page, expect } from '@playwright/test';
 import { BasePage } from '../base.page';
+import { TIMEOUTS } from '../../config/test-constants';
 
 export interface PersonalDetails {
   driverLicenseNumber?: string;
@@ -34,7 +35,9 @@ export class EditEmployeePage extends BasePage {
 
   // Personal Details — name inputs use name attribute (no accessible label on OrangeHRM)
   private readonly firstNameInput = () => this.page.locator('input[name="firstName"]');
+  private readonly middleNameInput = () => this.page.locator('input[name="middleName"]');
   private readonly lastNameInput = () => this.page.locator('input[name="lastName"]');
+  private readonly employeeIdInput = () => this.inputByLabel('Employee Id');
   private readonly driverLicenseInput = () => this.inputByLabel("Driver's License Number");
   private readonly dobInput = () => this.inputByLabel('Date of Birth');
   // Gender: exact role match prevents 'Male' filter from matching the 'Female' sibling
@@ -107,5 +110,28 @@ export class EditEmployeePage extends BasePage {
     const firstName = await this.firstNameInput().inputValue();
     const lastName = await this.lastNameInput().inputValue();
     return `${firstName} ${lastName}`.trim();
+  }
+
+  async getDisplayedFirstName(): Promise<string> {
+    // Wait for the SPA to populate the field after navigation
+    await expect(this.firstNameInput()).not.toHaveValue('', { timeout: TIMEOUTS.MEDIUM });
+    return this.firstNameInput().inputValue();
+  }
+
+  async getDisplayedLastName(): Promise<string> {
+    await expect(this.lastNameInput()).not.toHaveValue('', { timeout: TIMEOUTS.MEDIUM });
+    return this.lastNameInput().inputValue();
+  }
+
+  async getDisplayedMiddleName(): Promise<string> {
+    // Middle name can be empty — just wait for the field to be visible
+    await this.middleNameInput().waitFor({ state: 'visible' });
+    return this.middleNameInput().inputValue();
+  }
+
+  async getDisplayedEmployeeId(): Promise<string> {
+    // Employee Id is auto-generated so it will always be non-empty
+    await expect(this.employeeIdInput()).not.toHaveValue('', { timeout: TIMEOUTS.MEDIUM });
+    return this.employeeIdInput().inputValue();
   }
 }

@@ -34,6 +34,7 @@ test.describe('Employee Lifecycle', () => {
 
   test('1. Create employee with login credentials @employee @smoke', async ({
     addEmployeePage,
+    editEmployeePage,
   }) => {
     await allure.epic(ALLURE.EPIC.EMPLOYEE_MANAGEMENT);
     await allure.feature(ALLURE.FEATURE.EMPLOYEE_LIFECYCLE);
@@ -61,6 +62,18 @@ test.describe('Employee Lifecycle', () => {
       empNumber = await addEmployeePage.save();
       employeeId = employeeData.employeeId!;
       expect(empNumber).toBeTruthy();
+    });
+
+    await allure.step('Validate data displayed on Personal Details page', async () => {
+      const displayedFirstName = await editEmployeePage.getDisplayedFirstName();
+      const displayedLastName = await editEmployeePage.getDisplayedLastName();
+      const displayedMiddleName = await editEmployeePage.getDisplayedMiddleName();
+      const displayedEmployeeId = await editEmployeePage.getDisplayedEmployeeId();
+
+      expect(displayedFirstName).toBe(employeeData.firstName);
+      expect(displayedLastName).toBe(employeeData.lastName);
+      expect(displayedMiddleName).toBe(employeeData.middleName);
+      expect(displayedEmployeeId).toBe(employeeData.employeeId);
     });
   });
 
@@ -112,21 +125,19 @@ test.describe('Employee Lifecycle', () => {
 
   test('4. Verify updates persisted correctly @employee @regression', async ({
     editEmployeePage,
-    apiClient,
   }) => {
     await allure.story('Verify Updates Persisted');
 
-    await allure.step('Verify via UI', async () => {
+    await allure.step('Navigate to employee details', async () => {
       await editEmployeePage.gotoEmployee(empNumber);
-      const displayedName = await editEmployeePage.getDisplayedName();
-      expect(displayedName).toContain(employeeData.firstName);
-      expect(displayedName).toContain(employeeData.lastName);
     });
 
-    await allure.step('Cross-validate via API', async () => {
-      const apiEmployee = await apiClient.getEmployee(parseInt(empNumber, 10));
-      expect((apiEmployee as { firstName: string }).firstName).toBe(employeeData.firstName);
-      expect((apiEmployee as { lastName: string }).lastName).toBe(employeeData.lastName);
+    await allure.step('Verify updated data displayed on screen', async () => {
+      const displayedFirstName = await editEmployeePage.getDisplayedFirstName();
+      const displayedLastName = await editEmployeePage.getDisplayedLastName();
+      
+      expect(displayedFirstName).toBe(employeeData.firstName);
+      expect(displayedLastName).toBe(employeeData.lastName);
     });
   });
 
@@ -152,16 +163,17 @@ test.describe('Employee Lifecycle', () => {
 });
 
 /**
- * Parallel Employee Creation Tests
- * These run independently to validate parallel worker safety.
+ * API-Only Employee Tests
+ * Pure API tests without UI interaction - validates parallel worker safety.
  */
-test.describe('Parallel Employee Operations', () => {
-  test('Create and immediately verify employee via API @employee @regression', async ({
+test.describe('API Employee Operations', () => {
+  test('Create and immediately verify employee via API @employee @api @regression', async ({
     apiClient,
     empCleanup,
   }) => {
     await allure.epic('Employee Management');
-    await allure.feature('Employee CRUD');
+    await allure.feature('Employee CRUD API');
+    await allure.story('API Create and Retrieve');
 
     const employee = TestDataFactory.employee();
 
@@ -175,22 +187,37 @@ test.describe('Parallel Employee Operations', () => {
     expect((fetched as { firstName: string }).firstName).toBe(employee.firstName);
     expect((fetched as { lastName: string }).lastName).toBe(employee.lastName);
   });
+});
 
-  test('Employee list reflects newly created employee @employee @regression', async ({
+/**
+ * Integration Tests - Cross-Layer Validation
+ * These tests validate integration between API and UI layers.
+ * They create data via API and verify it appears correctly in UI.
+ */
+test.describe('API-to-UI Integration', () => {
+  test('Employee created via API appears in UI list @employee @integration @regression', async ({
     apiClient,
     employeeListPage,
     empCleanup,
   }) => {
+    await allure.epic('Employee Management');
+    await allure.feature('API-UI Integration');
+    await allure.story('API Create → UI Display');
+
     const employee = TestDataFactory.employee({ firstName: 'AutoTest', lastName: `User${Date.now()}` });
 
-    const { empNumber } = await apiClient.createEmployee({
-      firstName: employee.firstName,
-      lastName: employee.lastName,
+    await allure.step('Create employee via API', async () => {
+      const { empNumber } = await apiClient.createEmployee({
+        firstName: employee.firstName,
+        lastName: employee.lastName,
+      });
+      empCleanup.push(empNumber);
     });
-    empCleanup.push(empNumber);
 
-    await employeeListPage.goto();
-    await employeeListPage.searchByName(employee.firstName, employee.lastName);
-    await employeeListPage.expectEmployeeInResults(employee.firstName, employee.lastName);
+    await allure.step('Verify employee appears in UI list', async () => {
+      await employeeListPage.goto();
+      await employeeListPage.searchByName(employee.firstName, employee.lastName);
+      await employeeListPage.expectEmployeeInResults(employee.firstName, employee.lastName);
+    });
   });
 });

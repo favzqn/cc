@@ -1,0 +1,70 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: auth.setup.ts >> authenticate as admin
+- Location: tests/auth.setup.ts:16:6
+
+# Error details
+
+```
+Test timeout of 60000ms exceeded.
+```
+
+```
+TimeoutError: page.goto: Timeout 60000ms exceeded.
+Call log:
+  - navigating to "https://opensource-demo.orangehrmlive.com/web/index.php/auth/login", waiting until "networkidle"
+
+```
+
+# Test source
+
+```ts
+  1  | import { test as setup, expect } from '@playwright/test';
+  2  | import { config } from '../src/config/env.config';
+  3  | import { TIMEOUTS, WAIT_STATES } from '../src/config/test-constants';
+  4  | import * as fs from 'fs';
+  5  | import * as path from 'path';
+  6  | 
+  7  | /**
+  8  |  * Authentication Setup
+  9  |  *
+  10 |  * Runs before all browser-based tests to establish authenticated session.
+  11 |  * Saves storage state so subsequent tests skip the login step entirely.
+  12 |  */
+  13 | 
+  14 | const authFile = path.join(__dirname, '../src/.auth/admin.json');
+  15 | 
+  16 | setup('authenticate as admin', async ({ page }) => {
+  17 |   // OrangeHRM demo site can be very slow - use extended timeout and wait for network idle
+> 18 |   await page.goto('/web/index.php/auth/login', { 
+     |              ^ TimeoutError: page.goto: Timeout 60000ms exceeded.
+  19 |     waitUntil: WAIT_STATES.NETWORK_IDLE,
+  20 |     timeout: 60_000 // Extended timeout for slow demo site
+  21 |   });
+  22 | 
+  23 |   await expect(page.getByRole('button', { name: 'Login' })).toBeVisible({ timeout: TIMEOUTS.LONG });
+  24 | 
+  25 |   // Add timeout to login form interactions for slow demo site
+  26 |   await page.getByRole('textbox', { name: 'Username' }).fill(config.adminUser, { timeout: 30_000 });
+  27 |   await page.getByRole('textbox', { name: 'Password' }).fill(config.adminPassword, { timeout: 30_000 });
+  28 |   await page.getByRole('button', { name: 'Login' }).click({ timeout: 30_000 });
+  29 | 
+  30 |   // Wait for redirect to dashboard (successful login) - demo site can be slow
+  31 |   await page.waitForURL(/dashboard|pim|admin/, { timeout: 60_000 });
+  32 | 
+  33 |   await expect(page.locator('.oxd-topbar-header-breadcrumb')).toBeVisible();
+  34 | 
+  35 |   const authDir = path.dirname(authFile);
+  36 |   if (!fs.existsSync(authDir)) fs.mkdirSync(authDir, { recursive: true });
+  37 | 
+  38 |   await page.context().storageState({ path: authFile });
+  39 |   console.log(`[Setup] Auth state saved to ${authFile}`);
+  40 | });
+  41 | 
+```

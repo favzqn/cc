@@ -1,0 +1,1 @@
+[Setup] Auth state saved to /home/runner/work/cc/cc/src/.auth/admin.json

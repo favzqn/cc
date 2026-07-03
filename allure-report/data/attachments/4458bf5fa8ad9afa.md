@@ -1,0 +1,210 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: e2e/accessibility/a11y.spec.ts >> Accessibility Audits >> dashboard has no critical a11y violations @a11y
+- Location: tests/e2e/accessibility/a11y.spec.ts:106:7
+
+# Error details
+
+```
+Error: 
+Critical a11y violations:
+  [serious] link-name: Ensure links have discernible text
+
+expect(received).toHaveLength(expected)
+
+Expected length: 0
+Received length: 1
+Received array:  [{"description": "Ensure links have discernible text", "help": "Links must have discernible text", "helpUrl": "https://dequeuniversity.com/rules/axe/4.11/link-name?application=playwright", "id": "link-name", "impact": "serious", "nodes": [{"all": [], "any": [{"data": null, "id": "has-visible-text", "impact": "serious", "message": "Element does not have text that is visible to screen readers", "relatedNodes": []}, {"data": null, "id": "aria-label", "impact": "serious", "message": "aria-label attribute does not exist or is empty", "relatedNodes": []}, {"data": null, "id": "aria-labelledby", "impact": "serious", "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty", "relatedNodes": []}, {"data": {"messageKey": "noAttr"}, "id": "non-empty-title", "impact": "serious", "message": "Element has no title attribute", "relatedNodes": []}], "failureSummary": "Fix all of the following:
+  Element is in tab order and does not have accessible text·
+Fix any of the following:
+  Element does not have text that is visible to screen readers
+  aria-label attribute does not exist or is empty
+  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+  Element has no title attribute", "html": "<a data-v-0af708be=\"\" href=\"https://www.linkedin.com/company/orangehrm/mycompany/\" target=\"_blank\">", "impact": "serious", "none": [{"data": null, "id": "focusable-no-name", "impact": "serious", "message": "Element is in tab order and does not have accessible text", "relatedNodes": []}], "target": [".orangehrm-login-footer-sm > a:nth-child(1)"]}, {"all": [], "any": [{"data": null, "id": "has-visible-text", "impact": "serious", "message": "Element does not have text that is visible to screen readers", "relatedNodes": []}, {"data": null, "id": "aria-label", "impact": "serious", "message": "aria-label attribute does not exist or is empty", "relatedNodes": []}, {"data": null, "id": "aria-labelledby", "impact": "serious", "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty", "relatedNodes": []}, {"data": {"messageKey": "noAttr"}, "id": "non-empty-title", "impact": "serious", "message": "Element has no title attribute", "relatedNodes": []}], "failureSummary": "Fix all of the following:
+  Element is in tab order and does not have accessible text·
+Fix any of the following:
+  Element does not have text that is visible to screen readers
+  aria-label attribute does not exist or is empty
+  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+  Element has no title attribute", "html": "<a data-v-0af708be=\"\" href=\"https://www.facebook.com/OrangeHRM/\" target=\"_blank\">", "impact": "serious", "none": [{"data": null, "id": "focusable-no-name", "impact": "serious", "message": "Element is in tab order and does not have accessible text", "relatedNodes": []}], "target": ["a:nth-child(2)"]}, {"all": [], "any": [{"data": null, "id": "has-visible-text", "impact": "serious", "message": "Element does not have text that is visible to screen readers", "relatedNodes": []}, {"data": null, "id": "aria-label", "impact": "serious", "message": "aria-label attribute does not exist or is empty", "relatedNodes": []}, {"data": null, "id": "aria-labelledby", "impact": "serious", "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty", "relatedNodes": []}, {"data": {"messageKey": "noAttr"}, "id": "non-empty-title", "impact": "serious", "message": "Element has no title attribute", "relatedNodes": []}], "failureSummary": "Fix all of the following:
+  Element is in tab order and does not have accessible text·
+Fix any of the following:
+  Element does not have text that is visible to screen readers
+  aria-label attribute does not exist or is empty
+  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+  Element has no title attribute", "html": "<a data-v-0af708be=\"\" href=\"https://twitter.com/orangehrm?lang=en\" target=\"_blank\">", "impact": "serious", "none": [{"data": null, "id": "focusable-no-name", "impact": "serious", "message": "Element is in tab order and does not have accessible text", "relatedNodes": []}], "target": ["a:nth-child(3)"]}, {"all": [], "any": [{"data": null, "id": "has-visible-text", "impact": "serious", "message": "Element does not have text that is visible to screen readers", "relatedNodes": []}, {"data": null, "id": "aria-label", "impact": "serious", "message": "aria-label attribute does not exist or is empty", "relatedNodes": []}, {"data": null, "id": "aria-labelledby", "impact": "serious", "message": "aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty", "relatedNodes": []}, {"data": {"messageKey": "noAttr"}, "id": "non-empty-title", "impact": "serious", "message": "Element has no title attribute", "relatedNodes": []}], "failureSummary": "Fix all of the following:
+  Element is in tab order and does not have accessible text·
+Fix any of the following:
+  Element does not have text that is visible to screen readers
+  aria-label attribute does not exist or is empty
+  aria-labelledby attribute does not exist, references elements that do not exist or references elements that are empty
+  Element has no title attribute", "html": "<a data-v-0af708be=\"\" href=\"https://www.youtube.com/c/OrangeHRMInc\" target=\"_blank\">", "impact": "serious", "none": [{"data": null, "id": "focusable-no-name", "impact": "serious", "message": "Element is in tab order and does not have accessible text", "relatedNodes": []}], "target": ["a:nth-child(4)"]}], "tags": ["cat.name-role-value", "wcag2a", "wcag244", "wcag412", "section508", "section508.22.a", "TTv5", "TT6.a", "EN-301-549", "EN-9.2.4.4", …]}]
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e4]:
+  - generic [ref=e6]:
+    - img "company-branding" [ref=e8]
+    - generic [ref=e9]:
+      - heading "Login" [level=5] [ref=e10]
+      - generic [ref=e11]:
+        - generic [ref=e13]:
+          - paragraph [ref=e14]: "Username : Admin"
+          - paragraph [ref=e15]: "Password : admin123"
+        - generic [ref=e16]:
+          - generic [ref=e18]:
+            - generic [ref=e19]:
+              - generic [ref=e20]: 
+              - generic [ref=e21]: Username
+            - textbox "Username" [active] [ref=e23]
+          - generic [ref=e25]:
+            - generic [ref=e26]:
+              - generic [ref=e27]: 
+              - generic [ref=e28]: Password
+            - textbox "Password" [ref=e30]
+          - button "Login" [ref=e32] [cursor=pointer]
+          - paragraph [ref=e34] [cursor=pointer]: Forgot your password?
+      - generic [ref=e35]:
+        - generic [ref=e36]:
+          - link [ref=e37] [cursor=pointer]:
+            - /url: https://www.linkedin.com/company/orangehrm/mycompany/
+          - link [ref=e40] [cursor=pointer]:
+            - /url: https://www.facebook.com/OrangeHRM/
+          - link [ref=e43] [cursor=pointer]:
+            - /url: https://twitter.com/orangehrm?lang=en
+          - link [ref=e46] [cursor=pointer]:
+            - /url: https://www.youtube.com/c/OrangeHRMInc
+        - generic [ref=e49]:
+          - paragraph [ref=e50]: OrangeHRM OS 5.8
+          - paragraph [ref=e51]:
+            - text: © 2005 - 2026
+            - link "OrangeHRM, Inc" [ref=e52] [cursor=pointer]:
+              - /url: http://www.orangehrm.com
+            - text: . All rights reserved.
+  - img "orangehrm-logo" [ref=e54]
+```
+
+# Test source
+
+```ts
+  27  |   'scrollable-region-focusable', // Scrollable divs without tabindex
+  28  | ];
+  29  | 
+  30  | test.describe('Accessibility Audits', () => {
+  31  |   test('login page has no critical a11y violations @a11y', async ({ page }) => {
+  32  |     await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
+  33  |     await allure.feature('WCAG 2.1 AA');
+  34  |     await allure.story('Login Page');
+  35  |     await allure.severity(ALLURE.SEVERITY.NORMAL);
+  36  | 
+  37  |     // Navigate unauthenticated — login page is public
+  38  |     await page.goto(ROUTES.AUTH.LOGIN);
+  39  |     await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
+  40  | 
+  41  |     const results = await new AxeBuilder({ page })
+  42  |       .withTags([...WCAG_TAGS])
+  43  |       .analyze();
+  44  | 
+  45  |     await allure.attachment(
+  46  |       'axe-violations',
+  47  |       JSON.stringify(results.violations, null, 2),
+  48  |       'application/json'
+  49  |     );
+  50  | 
+  51  |     const actionable = results.violations.filter(
+  52  |       v => (v.impact === 'critical' || v.impact === 'serious') &&
+  53  |            !KNOWN_APP_VIOLATIONS.includes(v.id)
+  54  |     );
+  55  |     expect(actionable, formatViolations(actionable)).toHaveLength(0);
+  56  |   });
+  57  | 
+  58  |   test('employee list page has no critical a11y violations @a11y', async ({ page }) => {
+  59  |     await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
+  60  |     await allure.story('Employee List Page');
+  61  | 
+  62  |     await page.goto(ROUTES.PIM.EMPLOYEE_LIST);
+  63  |     await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
+  64  | 
+  65  |     const results = await new AxeBuilder({ page })
+  66  |       .withTags(['wcag2a', 'wcag2aa'])
+  67  |       .analyze();
+  68  | 
+  69  |     await allure.attachment(
+  70  |       'axe-violations',
+  71  |       JSON.stringify(results.violations, null, 2),
+  72  |       'application/json'
+  73  |     );
+  74  | 
+  75  |     const actionable = results.violations.filter(
+  76  |       v => (v.impact === 'critical' || v.impact === 'serious') &&
+  77  |            !KNOWN_APP_VIOLATIONS.includes(v.id)
+  78  |     );
+  79  |     expect(actionable, formatViolations(actionable)).toHaveLength(0);
+  80  |   });
+  81  | 
+  82  |   test('add employee form has no critical a11y violations @a11y', async ({ page }) => {
+  83  |     await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
+  84  |     await allure.story('Add Employee Form');
+  85  | 
+  86  |     await page.goto(ROUTES.PIM.ADD_EMPLOYEE);
+  87  |     await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
+  88  | 
+  89  |     const results = await new AxeBuilder({ page })
+  90  |       .withTags(['wcag2a', 'wcag2aa'])
+  91  |       .analyze();
+  92  | 
+  93  |     await allure.attachment(
+  94  |       'axe-violations',
+  95  |       JSON.stringify(results.violations, null, 2),
+  96  |       'application/json'
+  97  |     );
+  98  | 
+  99  |     const actionable = results.violations.filter(
+  100 |       v => (v.impact === 'critical' || v.impact === 'serious') &&
+  101 |            !KNOWN_APP_VIOLATIONS.includes(v.id)
+  102 |     );
+  103 |     expect(actionable, formatViolations(actionable)).toHaveLength(0);
+  104 |   });
+  105 | 
+  106 |   test('dashboard has no critical a11y violations @a11y', async ({ page }) => {
+  107 |     await allure.epic(ALLURE.EPIC.ACCESSIBILITY);
+  108 |     await allure.story('Dashboard');
+  109 | 
+  110 |     await page.goto(ROUTES.DASHBOARD);
+  111 |     await page.waitForLoadState(WAIT_STATES.NETWORK_IDLE);
+  112 | 
+  113 |     const results = await new AxeBuilder({ page })
+  114 |       .withTags(['wcag2a', 'wcag2aa'])
+  115 |       .analyze();
+  116 | 
+  117 |     await allure.attachment(
+  118 |       'axe-violations',
+  119 |       JSON.stringify(results.violations, null, 2),
+  120 |       'application/json'
+  121 |     );
+  122 | 
+  123 |     const actionable = results.violations.filter(
+  124 |       v => (v.impact === 'critical' || v.impact === 'serious') &&
+  125 |            !KNOWN_APP_VIOLATIONS.includes(v.id)
+  126 |     );
+> 127 |     expect(actionable, formatViolations(actionable)).toHaveLength(0);
+      |                                                      ^ Error: 
+  128 |   });
+  129 | });
+  130 | 
+  131 | function formatViolations(violations: Result[]): string {
+  132 |   if (violations.length === 0) return '';
+  133 |   return `\nCritical a11y violations:\n${violations.map(v =>
+  134 |     `  [${v.impact ?? 'unknown'}] ${v.id}: ${v.description}`
+  135 |   ).join('\n')}`;
+  136 | }
+  137 | 
+```
